@@ -1,0 +1,2321 @@
+Ex no:1  
+Write a C program to implement the following operations on Singly Linked List.
+(i)	Insert a node in the beginning of a list.
+(ii)	Insert a node after P
+(iii)	Insert a node at the end of a list
+(iv)	Find an element in a list
+(v)	FindNext
+(vi)	FindPrevious
+(vii)	isLast
+(viii)	isEmpty
+(ix)	Delete a node in the beginning of a list.
+(x)	Delete a node after P
+(xi)	Delete a node at the end of a list
+(xii)	Delete the List
+
+PROGRAM:
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdbool.h>
+#include<string.h>
+#include<math.h>
+#include<ctype.h>
+//LINKED LIST IMPLEMENTATION
+struct node{
+    int ele;
+    struct node *nxt;
+};
+typedef struct node node;
+int countNode(node *head)
+{
+    int count = 0;
+    if(head==NULL)
+    {
+        printf("the list is empty");
+        return 0;
+    }
+    node *pos = head;
+    while(pos!=NULL)
+        {   count++;
+            pos = pos->nxt;}
+            return count;
+}
+void print(node *head)
+{
+    if(head!=NULL)
+        {
+            node *pos =head;
+            while(pos!=NULL)
+            {
+                printf("%d",pos->ele);
+                if(pos->nxt!=NULL)
+                    printf("->");
+                pos = pos->nxt;
+            }
+            printf("\n");
+            return;
+        }
+    printf("The list is empty");    
+
+}
+void insertEnd(node* head,int x)
+{
+    node *pos = head;
+    node *nn = (node*)malloc(sizeof(node));
+    nn->ele = x;
+    while(pos->nxt!=NULL)
+        pos = pos->nxt;
+    nn->nxt = NULL;
+    pos->nxt = nn;    
+
+}
+node *insertBeg(node* head,int x)
+{
+   if(head->nxt == NULL)
+   {
+    head->ele = x;
+    return head;
+   }
+    node *nn = (node*)malloc(sizeof(node));
+    nn->ele = x;
+    nn->nxt = NULL;
+    nn->nxt = head;
+    head = nn;
+    return head;
+}
+int pos(node *l,int x)
+{
+    node *p = l;
+    int po = 1;
+    while(p!=NULL && p->ele!=x)
+      {  po++;
+        p = p->nxt;}
+    return po;
+
+}
+//void dt cannot be used becuz we are changing the head
+node *delBeg(node *head)
+{   node *temp = head;
+    head = head->nxt;
+    temp->nxt = NULL;
+    free(temp);
+    return head;
+}
+void delEnd(node *head)
+{
+    node *pos = head;
+    node *tempnode;
+    while(pos->nxt->nxt!=NULL)
+        pos = pos->nxt;
+    tempnode = pos->nxt;
+    pos->nxt = NULL;
+    free(tempnode);
+}
+node *FindPrev(node *head,int x)
+{   
+
+    node *n = head;
+    if(n->nxt == NULL)
+    {
+        return n;
+    }
+    while (n->nxt!=NULL && n->nxt->ele!=x)
+    {
+        n = n->nxt;
+    }
+    return n;
+}
+node* Find(node *head,int x)
+{
+    if(x==head->ele)
+    {
+        return head;
+    }
+    node *n = FindPrev(head,x);
+    return n->nxt;
+}
+node* FindNxt(node *head,int x)
+{
+    node *n = FindPrev(head,x);
+    return n->nxt->nxt;
+}
+void delMid(node *head,int x)
+{
+    node *n = FindPrev(head,x);
+    node *temp = n->nxt;
+    n->nxt = temp->nxt;
+    temp->nxt = NULL;
+    free(temp);
+}
+int Findele(node *head, int pos)
+{
+    node *po = head;
+    int temp = pos;
+    while(pos!=1)
+        {
+            pos--;
+            po = po->nxt;
+        }
+        return po->ele;
+
+}
+void insertMid(node *head,int x,int pos)
+{
+    node *n = (node*)malloc(sizeof(node));
+    n->ele = x;
+    n->nxt = NULL;
+    node *temp = Find(head,Findele(head,pos));
+    n->nxt = temp->nxt;
+    temp->nxt = n;
+
+}
+void del_after_pos(node *head,int pos)
+{
+    node *p = Find(head,Findele(head,pos));
+    node *temp = p->nxt;
+    p->nxt = temp->nxt;
+    temp->nxt = NULL;
+    free(temp);
+
+}
+int isEmpty(node *head)
+{
+    if(head == NULL)
+        return 1;
+    return 0;    
+}
+int isLast(node *head)
+{
+    if(head->nxt == NULL)
+        return 1;
+    return 0;    
+}
+node *tail(node *head)
+{
+    node *pos = head;
+    while(pos->nxt!=NULL)
+        pos = pos->nxt;
+    return pos;    
+}
+node* Del_List(node *list)
+{
+    
+    while(!isEmpty(list))
+    {
+        list = delBeg(list);
+    }
+    return list;
+}
+node *rev(node *head)
+{
+    node *prev = NULL;
+    node  *next = NULL;
+    while(head!=NULL)
+    {
+        next = head->nxt;
+        head->nxt = prev;
+        prev = head;
+        head = next;
+    }
+    head = prev;
+    return head;
+}
+int main()
+{
+    node *head = (node*)malloc(sizeof(node));
+    head->ele = 0;
+    head->nxt = NULL;//1
+    printf("%p %p\n",head,head->nxt);
+    node *current = (node*)malloc(sizeof(node));
+    current->ele = 87; //2
+    head->nxt = current;
+    current = (node*)malloc(sizeof(node));
+    current->ele = 50; //3
+    current->nxt = NULL;
+    head->nxt->nxt = current;
+    printf("%d\n",countNode(head));
+    print(head);
+    printf("\n");
+    insertEnd(head,6);
+    print(head);printf("\n");
+    head = insertBeg(head,8);
+    print(head);
+    insertEnd(head,89);
+    print(head);
+    head = insertBeg(head,47);print(head);
+    print(head);
+    printf("\n");
+    delMid(head,8);
+    print(Find(head,8));printf("\n");
+    print(head);printf("\n");
+    insertMid(head,11,3);
+    print(head);printf("\n");
+    printf("\n%d",Findele(head,2));
+    del_after_pos(head,3);
+    print(head);printf("\n");
+    node *temp =(node*)malloc(sizeof(node)); 
+    temp = Find(head,47);
+    if(temp == NULL)
+        printf("the element does not exist");
+    else 
+        printf("%d ",temp->ele);
+    printf("\n");        
+   head =  Del_List(head);
+    print(head);
+
+    print(head);
+    printf("\nThe pos of the element is: %d\n",pos(head,87));
+    head = delBeg(head);
+    print(head);
+    delEnd(head);
+    printf("\n");
+    print(head);
+    head = rev(head);
+    print(head);
+
+}
+
+
+OUTPUT:
+3
+0->87->50
+
+0->87->50->6
+
+8->0->87->50->6
+8->0->87->50->6->89
+47->8->0->87->50->6->89
+47->8->0->87->50->6->89
+
+The list is empty
+47->0->87->50->6->89
+
+47->0->87->11->50->6->89
+
+
+047->0->87->50->6->89
+
+47 
+The list is empty
+The list is empty
+The pos of the element is: 1
+
+Ex no:2
+Write a C program to implement the following operations on Doubly Linked List.
+(i)	Insertion
+(ii)	Deletion
+(iii)	Search
+(iv)	Display
+PROGRAM:
+//Doubly linked list
+struct node
+{
+    int ele;
+    struct node *prev;
+    struct node *nxt;
+};
+typedef struct node node;
+int isEmpty(node *list)
+{
+    if(list==NULL)
+        return 1;
+    return 0;    
+}
+int isLast(node *head)
+{
+    if(head->nxt==NULL)
+        return 1;
+    return 0;    
+}
+node *add_in_empty(node *head,int x)
+{
+    
+    node *nn = (node*)malloc(sizeof(node));
+    nn->ele = x;
+    nn->prev = NULL;nn->nxt = NULL;
+    head = nn;
+    return head;
+}
+node *insertBeg(node *head,int x)
+{
+    
+    node *nn = (node*)malloc(sizeof(node));
+    nn->ele = x;
+    nn->prev = NULL;nn->nxt = NULL;
+    nn->nxt = head;
+    head = nn;
+    return head;
+}
+node *Find(node *head,int x)
+{
+    node *pos = head;
+    while(pos!=NULL && pos->ele!=x)
+        pos = pos->nxt;
+        return pos;
+}
+void insertLast(node *head,int x)
+{
+    node *pos = head;
+    node *nn = (node*)malloc(sizeof(node));
+    nn->ele = x; nn->nxt = NULL; nn->prev = NULL;
+    while(pos->nxt!=NULL)
+        pos = pos->nxt;
+    pos->nxt = nn;
+    nn->prev = pos;
+    
+    
+}
+void print(node *head)
+{
+    node *pos = head;
+    if(head == NULL)
+        {
+            printf("the list is empty");
+            return;
+        }
+    while(pos!=NULL)
+        {printf("%d",pos->ele);
+        if(pos->nxt!=NULL)
+            printf("<->");
+        pos=pos->nxt;}
+        printf("\n");
+
+}
+int Findele(node *head, int pos)
+{
+    node *po = head;
+    int temp = pos;
+    while(pos!=1)
+        {
+            pos--;
+            po = po->nxt;
+        }
+        return po->ele;
+
+}
+node*Findprev(node *head,int x)
+{
+    if(head->prev == NULL)
+    {
+        printf("This is the first element\n");
+        return head;
+    }
+    return (Find(head,x)->prev);
+}
+node*Findnxt(node *head,int x)
+{
+    if(head->nxt==NULL)
+    {
+        printf("This is the last element\n");
+        return head;
+    }
+    return (Find(head,x)->nxt);
+}
+
+int pos(node *l,int x)
+{
+    node *p = l;
+    int po = 1;
+    while(p!=NULL && p->ele!=x)
+      {  po++;
+        p = p->nxt;}
+    return po;
+
+}
+node *del_Beg(node *head)
+{
+    if(head->nxt == NULL && head->prev == NULL)
+    {
+        free(head);
+        head = NULL;
+        return head;
+    }
+    head = head->nxt;
+    free(head->prev);
+    head->prev = NULL;
+    return head;
+}
+void del_end(node **head)
+{
+    
+    node *pos = *head;
+    if(pos->prev == NULL && pos->nxt == NULL)
+    {
+        free(pos);
+        *head = NULL;
+        return;
+    }
+    while(pos->nxt->nxt!=NULL)
+        pos = pos->nxt;
+    node *temp = pos->nxt;
+    pos->nxt = NULL;
+    temp->prev = NULL;
+    free(temp);
+
+}
+
+void insertMid(node *head,int x,int pos)
+{
+    node *t = Find(head,Findele(head,pos-1));
+    node *a = t->nxt;
+    node *nn = (node*)malloc(sizeof(node));
+    nn->ele = x;
+    nn->nxt = NULL;nn->prev = NULL;
+    nn->nxt = a; a->prev = nn;
+    t->nxt = nn;
+    nn->prev = t;
+}
+void del_mid(node *head,int x)
+{
+    //to delete the element x;
+    node *temp = Find(head,x);
+    node *t = temp->prev;
+    node *n = temp->nxt;
+    t->nxt = n; n->prev = t;
+    temp->nxt = NULL; temp->prev = NULL;
+    free(temp);
+}
+node *del_entire_list(node *head)
+{
+    
+    while(!isEmpty(head))
+    {
+        head =  del_Beg(head);
+    }
+return head;
+}
+void find(node *head,int x)
+{
+    node *pos = head;
+    while(pos->nxt!=NULL&& pos->ele!=x)
+    {
+        pos = pos->nxt; 
+    }
+    if(pos->ele == x)
+        printf("Element found\n");
+    else
+        printf("Element not found\n");    
+}
+int main()
+{
+    node *list = NULL;
+    list->nxt = NULL; list->prev = NULL;list->ele = 90;
+    list = add_in_empty(list,1);
+    print(list);
+    list = insertBeg(list,2);print(list);
+    list = insertBeg(list,3);print(list);
+    insertLast(list,4);print(list);
+    insertLast(list,5);print(list);
+    insertMid(list,100,2);print(list);
+    printf("\n%d\n",Findnxt(list,100)->ele);
+    del_mid(list,2);print(list);
+    list = del_Beg(list);print(list);
+    del_end(&list);print(list);
+    if(Find(list,99)!=NULL)
+        printf("element found\n");
+    else
+        printf("element not found\n");   
+        
+    list = del_entire_list(list);print(list);
+
+    return 0;
+}
+
+Ex no:3
+Applications of Singly Linked List (Polynomial Manipulation)
+PROGRAM:
+#include<stdio.h>
+#include<stdlib.h>
+#include<ctype.h>
+#include<stdbool.h>
+#include<string.h>
+#include<math.h>
+//POLYNOMIAL MANIPULATION
+struct node
+{
+    int coeff;
+    int expo;
+    char var;
+    struct node *nxt;
+};
+typedef struct node node;
+node *insert(node *head,int x,int y,char ch)
+{
+    
+    node *n = (node*)malloc(sizeof(node));
+    n->var = ch;
+    int d = x;
+    n->coeff = x;
+    n->expo = y;
+    n->nxt = NULL;
+    if(head==NULL || head->expo < y)
+    {
+        n->nxt = head; head = n;
+    }
+    else{
+        node *pos = head;
+        while(pos->nxt!=NULL && pos->nxt->expo > y)
+            pos = pos->nxt;
+        n->nxt = pos->nxt;
+        pos->nxt = n;    
+    }
+    return head;
+}
+void disp(node *head)
+{
+    node *p = head;
+    while(p!=NULL)
+        {printf("(%d%c^%d)",p->coeff,p->var,p->expo);
+        if(p->nxt!=NULL)
+            printf(" + ");
+        p = p->nxt;}
+    printf("\n");
+}
+node *create(node *head)
+{
+    int n;
+    printf("enter the number of terms of the polynomial: ");
+    scanf("%d",&n);
+    int i;
+    
+    for(i=0;i<n;i++)
+    {   printf("enter the coeff var and expo seperated by space: ");
+        int x,y;char ch;
+        scanf("%d %c %d",&x,&ch,&y);
+        head = insert(head,x,y,ch);
+        printf("\n");
+    }
+    return head;
+}
+void Add(node *p1, node* p2)
+{
+    node *ans = NULL;
+    node *pos1 = p1;
+    node *pos2 = p2;
+    
+    while(pos1!=NULL && pos2!=NULL)
+    {
+        if(pos1->expo==pos2->expo)
+            {
+                ans = insert(ans,pos1->coeff+pos2->coeff,pos1->expo,pos1->var);
+                pos1 = pos1->nxt;
+                pos2 = pos2->nxt;
+            }
+        else if(pos1->expo > pos2->expo)
+        {
+            ans = insert(ans,pos1->coeff,pos1->expo,pos1->var);
+            pos1 = pos1->nxt;       
+        }  
+        else if(pos2->expo>pos1->expo)
+        {
+            ans = insert(ans,pos2->coeff,pos2->expo,pos2->var);
+            pos2 = pos2->nxt;
+        }  
+        
+    }
+    
+        while (pos1!=NULL)
+        {
+            ans = insert(ans,pos1->coeff,pos1->expo,pos1->var);
+            pos1= pos1->nxt;
+        }
+        
+    
+    
+        while (pos2!=NULL)
+        {
+            ans = insert(ans,pos2->coeff,pos2->expo,pos2->var);
+            pos2= pos2->nxt;
+        }
+    disp(ans);    
+}
+void Sub(node *p1, node* p2)
+{
+    node *ans = NULL;
+    node *pos1 = p1;
+    node *pos2 = p2;
+    
+    while(pos1!=NULL && pos2!=NULL)
+    {
+        if(pos1->expo==pos2->expo)
+            {
+                ans = insert(ans,pos1->coeff-pos2->coeff,pos1->expo,pos1->var);
+                pos1 = pos1->nxt;
+                pos2 = pos2->nxt;
+            }
+        else if(pos1->expo > pos2->expo)
+        {
+            ans = insert(ans,pos1->coeff,pos1->expo,pos1->var);
+            pos1 = pos1->nxt;       
+        }  
+        else if(pos2->expo>pos1->expo)
+        {
+            ans = insert(ans,-1*pos2->coeff,pos2->expo,pos2->var);
+            pos2 = pos2->nxt;
+        }  
+        
+    }
+    
+        while (pos1!=NULL)
+        {
+            ans = insert(ans,pos1->coeff,pos1->expo,pos1->var);
+            pos1= pos1->nxt;
+        }
+        
+    
+    
+        while (pos2!=NULL)
+        {
+            ans = insert(ans,-1*pos2->coeff,pos2->expo,pos2->var);
+            pos2= pos2->nxt;
+        }
+    disp(ans);    
+}
+void mul(node *p1,node *p2)
+{
+    node *pos1 =  p1;
+    node *pos2  = p2;
+    node *ans = NULL;
+    while(pos1!=NULL)
+    {
+        
+        while(pos2!=NULL)
+        {
+            ans = insert(ans,pos1->coeff*pos2->coeff,pos1->expo+pos2->expo,pos1->var);
+            pos2 = pos2->nxt;
+        }
+        pos1=pos1->nxt;
+        pos2 = p2;
+    }
+    node *z = ans;node *temp = NULL;
+    while(z->nxt!=NULL)
+    {
+        if(z->expo == z->nxt->expo)
+        {
+            z->coeff = z->coeff+z->nxt->coeff;
+            temp = z->nxt;
+            z->nxt =z->nxt->nxt; temp->nxt = NULL;
+            free(temp); temp = NULL;
+        }
+        else
+            z = z->nxt;
+    }
+    disp(ans);
+}
+void diff(node *p)
+{
+    node *pos = p; node * ans = NULL;
+    while(pos->nxt!=NULL){
+        if(pos->expo!=0)
+        {
+            ans = insert(ans,pos->coeff*pos->expo,pos->expo-1,pos->var);
+            pos = pos->nxt;
+        }
+        
+    }
+    disp(ans);
+}
+
+int main()
+{
+    node *head1 = NULL;
+    head1 = create(head1);
+    node *head2 = NULL;
+    head2 = create(head2);
+    disp(head1);
+    disp(head2);
+    Add(head1,head2);
+    Sub(head1,head2);
+    mul(head1,head2);
+   diff(head1);
+    diff(head2);
+    printf("Thus polynomial manipulation is successfully executed");
+    return 0;
+}
+
+Ex no:4
+Implementation of Stack using Array and Linked List implementation
+PROGRAM:
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdbool.h>
+#include<string.h>
+#include<math.h>
+#include<ctype.h>
+#include<limits.h>
+#define SI 5
+//linked list implementation
+struct node
+{
+    int ele;
+    struct node *nxt;
+};
+typedef struct node node;
+node *top = NULL;
+void push(int x)
+{
+    if(top == NULL)
+    {
+        node *nn = (node*)malloc(sizeof(node));
+        nn->ele = x;
+        nn->nxt = NULL;
+        top = nn;
+        return;
+    }
+    node *nn = (node*)malloc(sizeof(node));
+    nn->ele = x;
+    nn->nxt = top;
+    top = nn;
+    
+}
+void disp()
+{
+   if(top == NULL)
+        {
+            printf("under flow\n");
+            return;
+        }
+    else{
+        node *pos = top;
+        while(pos!=NULL)
+        {
+            printf("%d ",pos->ele);
+            pos = pos->nxt;
+        }
+        printf("\n");
+    }    
+}
+int isEmpty()
+{
+    if(top == NULL)
+        return 1;
+    return 0;    
+}
+void pop()
+{
+    if(isEmpty())
+    {
+        printf("error");
+    }
+    else
+    {
+        node *temp = top;
+        top = top->nxt;
+        temp->nxt = NULL;
+        free(temp);
+    }
+}
+int main()
+{
+    disp();
+    push(5);
+    push(6);
+    disp();
+    pop(6);
+    pop(5);
+    disp();
+}
+//Array Implementation
+#include<stdio.h>
+#include<stdlib.h>
+int arr[100]; int top = -1;
+void push(int ele){
+    arr[++top] = ele;
+}
+void pop(){
+    printf("popped: %d\n",arr[top]);
+    top--;
+}
+void print(){
+    int p = top;
+    while(p!=-1){
+        printf("%d ",arr[p]);
+        p--;
+    }
+    
+    if(top==-1){
+        printf("the stack is empty");
+    }
+    printf("\n");
+}
+int main(){
+    push(1);push(2);push(3);
+    print();
+    pop();
+    print();
+}
+
+Ex no:5
+Applications of Stack (Infix to Postfix)
+PROGRAM:
+#include<stdio.h>
+#include<stdlib.h>
+#include<ctype.h>
+#include<stdbool.h>
+#include<string.h>
+#include<math.h>
+#define N 100
+char stack[100], op[100]; int top = -1,idx = 0;
+void push(char x)
+{
+    top++;
+    stack[top] = x;
+}
+void pop()
+{
+    if(stack[top]=='(')
+    {
+        top--;
+        return;
+    }
+    op[idx] = stack[top]; idx++;
+    top--;
+}
+int main()
+{
+    char str[100]; int ar[7] = {6,6,5,4,3,2,1};
+    scanf("%s",str);
+    int i,flag = 0;
+    for(i=0;i<strlen(str);i++)
+    {
+       if(ispunct(str[i]))
+       { 
+          if(str[i]=='(')
+             {push(str[i]);
+             flag = 1;}
+             
+
+          else if(str[i]==')')
+          { 
+            while(stack[top]!='(')
+                pop();
+            pop();
+            flag = 0;
+            continue;   
+          }
+          else if(top==-1)
+          {
+            push(str[i]);
+          }
+          else if(top!=-1){
+            int t = 0, t1 = 0;
+            switch (str[i]){
+                case '^':
+                  t = ar[2];break;
+                case '*':
+                  t = ar[3];break;
+                case '/':
+                  t=ar[4];break;
+                case '+':
+                  t = ar[5];break;   
+                case '-':
+                   t =ar[6];break;   
+            }
+            switch (stack[top]){
+                case '^':
+                  t1 = ar[2];break;
+                case '*':
+                  t1 = ar[3];break;
+                case '/':
+                  t1=ar[4];break;
+                case '+':
+                  t1 = ar[5];break;   
+                case '-':
+                   t1 =ar[6];break;   
+            }
+            if((t<t1||t==t1)&&(stack[top]!='('))
+            {
+                if(flag!=1)
+                {while(top!=-1)
+                    pop();
+                push(str[i]); } 
+                if(flag==1)
+                {
+                    while(stack[top]!='(')
+                        pop();
+                    push(str[i]);    
+                }  
+            }
+            if(t>t1)
+                push(str[i]);
+          }
+          
+          }
+    else if(isalnum(str[i]))
+       {
+          op[idx] = str[i]; idx++;
+       }
+       }
+while(top!=-1){
+    pop();
+}       
+for(i=0;i<strlen(op);i++)
+    printf("%c",op[i]);       
+       
+    
+    return 0;
+}
+
+Ex no: 6
+Applications of Stack (Evaluating Arithmetic Expression)
+PROGRAM:
+//EVALUATION OF POSTFIX
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdbool.h>
+#include<string.h>
+#include<math.h>
+#include<ctype.h>
+#include<limits.h>
+#define SI 5
+ char arr[100]; int top = -1; int stack[100];
+void push(int ele)
+{
+top++;
+stack[top] = ele;
+//printf("top:%d\n",stack[top]);
+}
+int pop()
+{
+    int x = stack[top] ;
+    top--;
+    return x;
+}
+
+int eval(char arr[])
+{   char s[100] = "\0"; int flag = 0;
+    for(int i = 0;i<strlen(arr);i++)
+    {
+        if(isdigit(arr[i]))
+            {
+                strncat(s,&arr[i],1);
+                flag = 1;
+            }
+        else if(arr[i]==' ' && flag!=0){
+            int t = atoi(s);
+            push(t);
+            strcpy(s,"\0");
+            flag  = 0 ;
+        }
+        else if(ispunct(arr[i]) && arr[i]!=' '){
+            switch(arr[i]){
+                case '*':
+                    {
+                        int t1 = pop(); int t2 = pop();
+                        push(t1*t2);
+                        break;
+                    }
+                case '-':
+                    {
+                        int t1 = pop(); int t2 = pop();
+                        push(t2-t1);
+                        break;
+                    }
+                case '/':
+                    {
+                        int t1 = pop(); int t2 = pop();
+                        push(t2/t1);
+                        break;
+                    }
+                case '+':
+                    {
+                        int t1 = pop(); int t2 = pop();
+                        push(t1+t2);
+                        break;
+                    }
+                case '^':
+                    {
+                        int t1 = pop(); int t2 = pop();
+                        t2-=1;
+                        while(t2--){
+                            t1*=t1;
+                        }
+                        push(t1);
+                        break;
+                    }
+            }
+            //printf("%d\n",stack[top]);
+        }
+
+    }
+    return stack[top];
+}
+int main()
+{
+    fgets(arr,100,stdin);
+    int ans = eval(arr);
+    printf("%d",ans);
+    return 0;
+}
+
+Ex no:7
+Implementation of Queue using Array and Linked List implementation
+PROGRAM:
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdbool.h>
+#include<string.h>
+#include<math.h>
+#include<ctype.h>
+#include<limits.h>
+#define SI 5
+//ARRAY IMPLEMENTATION OF QUEUES
+int arr[100];
+int f=-1, r = -1;
+void enqueue(int x)
+{
+    if(f==-1)
+    {
+        f++;
+        r++;
+        arr[r] = x;
+    }
+    else if(r==f && r!=0){
+        printf("overflow :(\n");
+    }
+    else{
+        r++;
+        arr[r] = x;
+    }
+}
+void dequeue()
+{
+    if(f==-1||f>r){
+        printf("underflow :(\n");
+        return;
+    }
+    printf("the dequeued element is:%d\n",arr[f]);
+    f++;
+}
+void disp()
+{
+    if((f==-1&&r==-1)||(f>r)){
+        printf("the queue is empty:)\n");
+        return;
+    }
+    int pos = f;
+    while(pos<=r){
+        printf("%d ",arr[pos]);
+        pos++;
+    }
+    printf("\n");
+}
+int main()
+{
+ 
+while(true){
+    printf("Dear user pls enter 1 to enqueue, 0 to dequeue and 3 to display\n and 4 to exit : ");
+    int n;
+    scanf("%d",&n);
+    if(n==1){
+        printf("enter the element to enqueue: ");
+        int x;
+        scanf("%d",&x);
+        enqueue(x);
+        printf("the queue after the enqueue of %d\n",x);
+        disp();
+    }
+    else if(n==0){
+        dequeue();
+        
+    }
+    else if(n==3){
+        printf("your queue:\n");
+        disp();
+    }
+    else if(n==4){
+        printf("THANKYOU :)\n");
+        break;
+    }
+}
+   
+return 0;
+//LINKED LIST IMPLEMENTATION OF QUEUES
+struct node{
+int ele;
+struct node *nxt;
+};
+
+typedef struct node node;
+node *f = NULL, *r = NULL; 
+void enqueue(int x){
+    if(f==NULL){
+        node *nn = (node*)malloc(sizeof(node));
+        nn->ele = x;
+        nn->nxt = NULL;
+        f = nn;
+        r = nn;
+    }
+    else{
+        node *nn = (node*)malloc(sizeof(node));
+        nn->ele = x;
+        nn->nxt = NULL;
+        r->nxt = nn;
+        r = nn;
+        }
+
+}
+void dequeue(){
+if(f==NULL){
+    printf("underflow :( \n");
+    return;
+}
+node *temp = f;
+f = f->nxt;
+temp->nxt = NULL;
+free(temp);
+temp = NULL;
+}
+void disp()
+{
+if(f==NULL){
+    printf("the queue is empty\n");
+    return;
+}
+node *pos = f;
+while(pos!=NULL)
+{
+    printf("%d ",pos->ele);
+    pos = pos->nxt;
+}
+printf("\n");
+}
+int main()
+{
+ 
+while(true){
+    printf("Dear user pls enter 1 to enqueue, 0 to dequeue and 3 to display\n and 4 to exit : ");
+    int n;
+    scanf("%d",&n);
+    if(n==1){
+        printf("enter the element to enqueue: ");
+        int x;
+        scanf("%d",&x);
+        enqueue(x);
+        printf("the queue after the enqueue of %d\n",x);
+        disp();
+    }
+    else if(n==0){
+        dequeue();
+        
+    }
+    else if(n==3){
+        printf("your queue:\n");
+        disp();
+    }
+    else if(n==4){
+        printf("THANKYOU :)\n");
+        break;
+    }
+}
+   
+return 0;
+}
+
+Ex no:8
+Performing Tree Traversal Techniques
+PROGRAM:
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdbool.h>
+#include<string.h>
+#include<math.h>
+#include<ctype.h>
+#include<limits.h>
+#define SI 5
+typedef struct node{
+int root;
+struct node *l;
+struct  node *r;
+}node;
+
+node *insert(node *tree,int ele)
+{
+    if(tree ==NULL){
+        node *nn = (node*)malloc(sizeof(node));
+        nn->root = ele;
+        nn->l = NULL; nn->r = NULL;
+        tree = nn;
+    }
+    else if(tree->root > ele)
+    {
+        tree->l = insert(tree->l,ele);
+    }
+    
+    else if(tree->root < ele)
+    {
+        tree->r = insert(tree->r,ele);
+    }
+    return tree;
+}
+void preorder(node *tree){
+    if(tree!=NULL){
+        printf("%d ",tree->root);
+    preorder(tree->l);
+    preorder(tree->r);
+    }
+}
+void inorder(node *tree)
+{
+    if(tree!=NULL){
+        inorder(tree->l);
+    printf("%d ",tree->root);
+    inorder(tree->r);
+    }
+}
+void postorder(node *tree){
+    if(tree!=NULL){
+        postorder(tree->l);
+    postorder(tree->r);
+    printf("%d ",tree->root);
+    }
+}
+int main()
+{
+    node *tree = NULL;
+    tree = insert(tree,1);
+    tree = insert(tree,0);
+    tree  =insert(tree,9);
+    tree = insert(tree,8);
+    tree = insert(tree,62);
+    printf("preorder: ");
+    preorder(tree);
+    printf("\n");
+    printf("inorder: ");
+    inorder(tree);
+    printf("\n");
+    printf("postorder: ");
+    postorder(tree);
+    printf("\n");
+    return 0;
+}
+
+Ex no:9
+Implementation of Binary Search Tree
+PROGRAM:
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdbool.h>
+#include<string.h>
+#include<math.h>
+#include<ctype.h>
+#include<limits.h>
+#define SI 5
+typedef struct node{
+    int root;
+    struct node *l;
+    struct node *r;
+}node;
+node *insert(node *tree,int ele)
+{
+    if(tree==NULL)
+    {
+        node *nn = (node*)malloc(sizeof(node));
+        nn->root = ele; nn->l = NULL; nn->r = NULL;
+        tree = nn;
+    }
+    else if(ele<tree->root){
+        tree->l = insert(tree->l,ele);
+    }
+    else if(ele>tree->root){
+        tree->r = insert(tree->r,ele);
+    }
+    return tree;
+}
+node *findmin(node *tree){
+    if(tree==NULL)
+        return NULL;
+    else if(tree->l==NULL)
+        return tree;
+    else 
+    {
+        return findmin(tree->l);
+    }
+}
+node *findmax(node *tree){
+    if(tree==NULL)
+        return NULL;
+    else if(tree->r==NULL)
+        return tree;
+    else 
+    {
+        return findmax(tree->r);
+    }
+}
+node *find(node *tree,int ele){
+    if(tree == NULL){
+        return NULL;
+    }
+    else if(ele<tree->root)
+        return find(tree->l,ele);
+    else if(ele>tree->root)
+        return find(tree->r,ele);
+    else
+        return tree;
+}
+node *delete(node *tree,int ele){
+    if(tree==NULL){
+        printf("deletion cannot be performed\n");
+        return NULL;
+    }
+    else if(ele<tree->root){
+        tree->l = delete(tree->l,ele);
+    }
+    else if(ele>tree->root){
+        tree->r = delete(tree->r,ele);
+    }
+    //if the control comes to this else part then it means root = ele
+    else {
+        //2 cond-> i) single ii) with two children iii) no child
+        //i)
+        if(tree->l == NULL && tree->r==NULL){
+            free(tree);
+            tree = NULL;
+        }
+        else if(tree->l==NULL || tree->r == NULL){
+            node *temp;
+            if(tree->l==NULL)
+                temp = tree->r;
+            if(tree->r==NULL)
+                temp = tree->l;
+            free(tree);
+            tree = NULL;
+            return temp;
+        }
+        else{
+            node *temp = findmin(tree->r);
+            tree->root = temp->root; // the root is replaced with the min elet
+            tree->r = delete(tree->r,temp->root); // the min ele is deleted from its original pos
+        }
+        return tree;
+    }
+}
+void disp(node *tree)
+{
+    if(tree!=NULL){
+        disp(tree->l);
+        printf("%d ",tree->root);
+        disp(tree->r);
+    }
+}
+int main()
+{
+    node *tree = NULL;
+    tree = insert(tree,5);
+    tree = insert(tree,4);
+    tree = insert(tree,7);
+    disp(tree);
+    printf("\n");
+    tree = delete(tree,5);
+    disp(tree);
+}
+
+Ex no:10
+Implementation of AVL Tree
+PROGRAM:
+// C program to insert a node in AVL tree 
+#include<stdio.h> 
+#include<stdlib.h> 
+
+// An AVL tree node 
+struct Node 
+{ 
+	int key; 
+	struct Node *left; 
+	struct Node *right; 
+	int height; 
+}; 
+
+// A utility function to get the height of the tree 
+int height(struct Node *N) 
+{ 
+	if (N == NULL) 
+		return 0; 
+	return N->height; 
+} 
+
+// A utility function to get maximum of two integers 
+int max(int a, int b) 
+{ 
+	return (a > b)? a : b; 
+} 
+
+/* Helper function that allocates a new node with the given key and 
+	NULL left and right pointers. */
+struct Node* newNode(int key) 
+{ 
+	struct Node* node = (struct Node*) 
+						malloc(sizeof(struct Node)); 
+	node->key = key; 
+	node->left = NULL; 
+	node->right = NULL; 
+	node->height = 1; // new node is initially added at leaf 
+	return(node); 
+} 
+
+// A utility function to right rotate subtree rooted with y 
+// See the diagram given above. 
+struct Node *rightRotate(struct Node *y) 
+{ 
+	struct Node *x = y->left; 
+	struct Node *T2 = x->right; 
+
+	// Perform rotation 
+	x->right = y; 
+	y->left = T2; 
+
+	// Update heights 
+	y->height = max(height(y->left), 
+					height(y->right)) + 1; 
+	x->height = max(height(x->left), 
+					height(x->right)) + 1; 
+
+	// Return new root 
+	return x; 
+} 
+
+// A utility function to left rotate subtree rooted with x 
+// See the diagram given above. 
+struct Node *leftRotate(struct Node *x) 
+{ 
+	struct Node *y = x->right; 
+	struct Node *T2 = y->left; 
+
+	// Perform rotation 
+	y->left = x; 
+	x->right = T2; 
+
+	// Update heights 
+	x->height = max(height(x->left), 
+					height(x->right)) + 1; 
+	y->height = max(height(y->left), 
+					height(y->right)) + 1; 
+
+	// Return new root 
+	return y; 
+} 
+
+// Get Balance factor of node N 
+int getBalance(struct Node *N) 
+{ 
+	if (N == NULL) 
+		return 0; 
+	return height(N->left) - height(N->right); 
+} 
+
+// Recursive function to insert a key in the subtree rooted 
+// with node and returns the new root of the subtree. 
+struct Node* insert(struct Node* node, int key) 
+{ 
+	/* 1. Perform the normal BST insertion */
+	if (node == NULL) 
+		return(newNode(key)); 
+
+	if (key < node->key) 
+		node->left = insert(node->left, key); 
+	else if (key > node->key) 
+		node->right = insert(node->right, key); 
+	else // Equal keys are not allowed in BST 
+		return node; 
+
+	/* 2. Update height of this ancestor node */
+	node->height = 1 + max(height(node->left), 
+						height(node->right)); 
+
+	/* 3. Get the balance factor of this ancestor 
+		node to check whether this node became 
+		unbalanced */
+	int balance = getBalance(node); 
+
+	// If this node becomes unbalanced, then 
+	// there are 4 cases 
+
+	// Left Left Case 
+	if (balance > 1 && key < node->left->key) 
+		return rightRotate(node); 
+
+	// Right Right Case 
+	if (balance < -1 && key > node->right->key) 
+		return leftRotate(node); 
+
+	// Left Right Case 
+	if (balance > 1 && key > node->left->key) 
+	{ 
+		node->left = leftRotate(node->left); 
+		return rightRotate(node); 
+	} 
+
+	// Right Left Case 
+	if (balance < -1 && key < node->right->key) 
+	{ 
+		node->right = rightRotate(node->right); 
+		return leftRotate(node); 
+	} 
+
+	/* return the (unchanged) node pointer */
+	return node; 
+} 
+
+// A utility function to print preorder traversal 
+// of the tree. 
+// The function also prints height of every node 
+void preOrder(struct Node *root) 
+{ 
+	if(root != NULL) 
+	{ 
+		printf("%d ", root->key); 
+		preOrder(root->left); 
+		preOrder(root->right); 
+	} 
+} 
+
+/* Driver program to test above function*/
+int main() 
+{ 
+struct Node *root = NULL; 
+
+/* Constructing tree given in the above figure */
+root = insert(root, 10); 
+root = insert(root, 20); 
+root = insert(root, 30); 
+root = insert(root, 40); 
+root = insert(root, 50); 
+root = insert(root, 25); 
+
+
+printf("Preorder traversal of the constructed AVL"
+		" tree is \n"); 
+preOrder(root); 
+
+return 0; 
+} 
+
+Ex no:11
+Implementation of BFS, DFS
+PROGRAM:
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdbool.h>
+#include<string.h>
+#include<math.h>
+#include<ctype.h>
+#include<limits.h>
+#define SI 5
+typedef struct node{
+    int data;
+    struct node *nxt;
+}node;
+node *create_node(int data){
+    node *nn = (node*)malloc(sizeof(node));
+    nn->data = data;
+    nn->nxt = NULL;
+    return nn;
+}
+void addEdge(node *al[],int u,int v)
+{
+    node *nn = create_node(v);
+    nn->nxt  = al[u];
+    al[u] = nn;
+}
+void dfs(node *al[],int start,bool visited[]){
+    visited[start] = true;
+    printf("%d ",start);
+    node *temp = al[start];
+    while(temp!=NULL){
+        if(!visited[temp->data]){
+            dfs(al,temp->data,visited);
+        } temp = temp->nxt;
+    }
+}
+void bfs(node *al[],int start,int vert,bool visited[]){
+int queue[vert];
+int f = 0; int r = 0;
+visited[start] = true;
+queue[r++] = start;
+while(f!=r){
+    int cn = queue[f++];
+    printf("%d ",cn);
+    node *temp = al[cn];
+    while(temp!=NULL){
+        if(!visited[temp->data]){
+            visited[temp->data] = true;
+            queue[r++] = temp->data;
+        }
+        temp = temp->nxt;
+    }
+}
+}
+int main()
+{
+    int vertices = 5;
+    node *al[vertices];
+    for(int i = 0;i<vertices;i++){
+        al[i] = NULL;
+    }
+    addEdge(al, 0, 1);
+    addEdge(al, 0, 2);
+    addEdge(al, 1, 3);
+    addEdge(al, 1, 4);
+    addEdge(al, 2, 4);
+    bool visited[vertices];
+    for(int i = 0;i<vertices;i++)
+        visited[i] = false;
+    printf("DFS:");
+    dfs(al,0,visited);
+    for(int i = 0;i<vertices;i++)
+        visited[i] = false;
+    printf("\nBFS:");
+    bfs(al,0,5,visited);
+    return 0;
+}
+
+Ex no:12
+Performing Topological Sorting
+PROGRAM:
+// C Program to implement Topological Sorting 
+#include <stdbool.h> 
+#include <stdio.h> 
+#include <stdlib.h> 
+
+// Structure to represent a stack 
+struct Stack { 
+	int data; 
+	struct Stack* next; 
+}; 
+
+struct Graph { 
+	int V; // No. of vertices 
+	// Pointer to an array containing adjacency lists 
+	struct List* adj; 
+}; 
+
+// Structure to represent a list (adjacency list) 
+struct List { 
+	int data; 
+	struct List* next; 
+}; 
+
+// Create a new node for the stack 
+struct Stack* createStackNode(int data) 
+{ 
+	struct Stack* newNode 
+		= (struct Stack*)malloc(sizeof(struct Stack)); 
+	newNode->data = data; 
+	newNode->next = NULL; 
+	return newNode; 
+} 
+
+// Create a new node for the adjacency list 
+struct List* createListNode(int data) 
+{ 
+	struct List* newNode 
+		= (struct List*)malloc(sizeof(struct List)); 
+	newNode->data = data; 
+	newNode->next = NULL; 
+	return newNode; 
+} 
+
+// Function to initialize a graph with V vertices 
+struct Graph* createGraph(int V) 
+{ 
+	struct Graph* graph 
+		= (struct Graph*)malloc(sizeof(struct Graph)); 
+	graph->V = V; 
+	graph->adj 
+		= (struct List*)malloc(V * sizeof(struct List)); 
+	for (int i = 0; i < V; ++i) { 
+		graph->adj[i].next = NULL; 
+	} 
+	return graph; 
+} 
+
+// Function to add an edge to the graph 
+void addEdge(struct Graph* graph, int v, int w) 
+{ 
+	struct List* newNode = createListNode(w); 
+	newNode->next = graph->adj[v].next; 
+	graph->adj[v].next = newNode; 
+} 
+
+// A recursive function used by topologicalSort 
+void topologicalSortUtil(struct Graph* graph, int v, 
+						bool visited[], 
+						struct Stack** stack) 
+{ 
+	visited[v] = true; 
+
+	struct List* current = graph->adj[v].next; 
+	while (current != NULL) { 
+		int adjacentVertex = current->data; 
+		if (!visited[adjacentVertex]) { 
+			topologicalSortUtil(graph, adjacentVertex, 
+								visited, stack); 
+		} 
+		current = current->next; 
+	} 
+
+	// Push the current vertex to stack which stores the 
+	// result 
+	struct Stack* newNode = createStackNode(v); 
+	newNode->next = *stack; 
+	*stack = newNode; 
+} 
+
+// The function to do Topological Sort. It uses recursive 
+// topologicalSortUtil 
+void topologicalSort(struct Graph* graph) 
+{ 
+	struct Stack* stack = NULL; 
+
+	// Mark all the vertices as not visited 
+	bool* visited = (bool*)malloc(graph->V * sizeof(bool)); 
+	for (int i = 0; i < graph->V; ++i) { 
+		visited[i] = false; 
+	} 
+
+	// Call the recursive helper function to store 
+	// Topological Sort starting from all vertices one by 
+	// one 
+	for (int i = 0; i < graph->V; ++i) { 
+		if (!visited[i]) { 
+			topologicalSortUtil(graph, i, visited, &stack); 
+		} 
+	} 
+
+	// Print contents of stack 
+	while (stack != NULL) { 
+		printf("%d ", stack->data); 
+		struct Stack* temp = stack; 
+		stack = stack->next; 
+		free(temp); 
+	} 
+
+	// Free allocated memory 
+	free(visited); 
+	free(graph->adj); 
+	free(graph); 
+} 
+
+// Driver program to test above functions 
+int main() 
+{ 
+	// Create a graph given in the above diagram 
+	struct Graph* g = createGraph(6); 
+	addEdge(g, 5, 2); 
+	addEdge(g, 5, 0); 
+	addEdge(g, 4, 0); 
+	addEdge(g, 4, 1); 
+	addEdge(g, 2, 3); 
+	addEdge(g, 3, 1); 
+
+	printf("Topological Sorting Order: "); 
+	topologicalSort(g); 
+
+	return 0; 
+}
+
+Ex no:13
+Implementation of Prim’s Algorithm
+PROGRAM:
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdbool.h>
+#include<string.h>
+#include<math.h>
+#include<ctype.h>
+#include<limits.h>
+#define SI 5
+int minkey(int key[],bool mstv[]){ // to return the vertex with the min wt
+    int min = INT_MAX; int min_idx;
+    for(int i = 0;i<SI;i++){
+        if(mstv[i]==false && key[i]<min)
+            {
+                min = key[i]; min_idx = i;
+            }
+        
+    }
+return min_idx;
+}
+void printmst(int parent[],int graph[SI][SI]){
+    printf("edge\tweight\n");
+    for(int i = 1;i<SI;i++){
+        printf("%d-%d\t%d\n",parent[i],i,graph[i][parent[i]]);
+        
+    }
+}
+void prims(int graph[SI][SI]){
+    int parent[SI];
+    bool mstv[SI];
+    int key[SI];
+    for(int i = 0;i<SI;i++){
+        key[i] = INT_MAX; mstv[i] = false;
+    }
+    key[0] = 0; parent[0] = -1;
+    for(int i = 0;i<SI-1;i++){
+        int u = minkey(key,mstv);
+        mstv[u] = true;
+        for (int j = 0;j<SI;j++){
+            if(graph[u][j] && mstv[j]==false && graph[u][j]<key[j]){
+                parent[j] = u; key[j] = graph[u][j]; 
+            }
+        }
+    }
+    printmst(parent,graph);
+}
+int main()
+{
+    int graph[SI][SI] = { { 0, 2, 0, 6, 0 },
+                        { 2, 0, 3, 8, 5 },
+                        { 0, 3, 0, 0, 7 },
+                        { 6, 8, 0, 0, 9 },
+                        { 0, 5, 7, 9, 0 } };
+ 
+    
+    prims(graph);
+ 
+    return 0;
+}
+
+Ex no:14
+Implementation of Dijkstra’s Algorithm
+PROGRAM:
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdbool.h>
+#include<string.h>
+#include<math.h>
+#include<ctype.h>
+#include<limits.h>
+#define SI 5
+int minkey(int key[],bool spt[]){
+    int min = INT_MAX, min_idx;
+    for(int i = 0;i<SI;i++){
+        if(!spt[i] && key[i]<min ){
+            min_idx = i; min = key[i];
+        }
+    }
+    return min_idx;
+}
+
+void print(int dist[]){
+    printf("vtx\tdist frm src\n");
+    for(int i = 0;i<SI;i++)
+        printf("%d\t%d\n",i,dist[i]);
+}
+void dij(int graph[SI][SI],int src){
+    int dist[SI];
+    bool spt[SI];
+    for(int i = 0;i<SI;i++){
+        dist[i] = INT_MAX;
+        spt[i] = false;
+    }
+    dist[0] = 0;
+    for(int i = 0;i<SI-1;i++){
+        int u = minkey(dist,spt);
+        spt[u] = true;
+        for (int v = 0; v < SI; v++)
+            if (!spt[v] && graph[u][v] && dist[u] != INT_MAX && dist[u] + graph[u][v] < dist[v])
+                dist[v] = dist[u] + graph[u][v];
+
+    }
+print(dist);
+}
+int main(){
+    int graph[SI][SI] = {
+        {0, 4, 0, 0, 0},
+        {4, 0, 8, 0, 0},
+        {0, 8, 0, 7, 0},
+        {0, 0, 7, 0, 9},
+        {0, 0, 0, 9, 0}
+    };
+    dij(graph,0);
+    return 0;
+
+}
+Ex no:15
+Program to perform Sorting
+PROGRAM:
+//QUICK SORT
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdbool.h>
+#include<string.h>
+#include<math.h>
+#include<ctype.h>
+#include<limits.h>
+#define SI 5
+int arr[100];
+void swap(int *a, int *b)
+{
+    int t;
+    t = *a;
+    *a = *b;
+    *b =t;
+}
+int partition(int low, int high) 
+{ 
+  
+    // initialize pivot to be the first element 
+    int pivot = arr[low]; 
+    int i = low; 
+    int j = high; 
+  
+    while (i < j) { 
+  
+        // condition 1: find the first element greater than 
+        // the pivot (from starting) 
+        while (arr[i] <= pivot && i <high) { 
+            i++; 
+        } 
+  
+        // condition 2: find the first element smaller than 
+        // the pivot (from last) 
+        while (arr[j] > pivot && j >low) { 
+            j--; 
+        } 
+        if (i < j) { 
+            swap(&arr[i], &arr[j]); 
+        } 
+    } 
+    swap(&arr[low], &arr[j]); 
+    return j; 
+} 
+void quick_sort(int l,int h){
+    if(l<h){
+        int p = partition(l,h);
+        quick_sort(l,p-1);
+        quick_sort(p+1,h);
+    }
+}
+void print()
+{
+    for(int i = 0;i<SI;i++)
+        printf("%d ",arr[i]);
+}
+int main()
+{
+    printf("Enter the numbers:\n");
+    for(int i =0;i<SI;i++)
+        scanf("%d",&arr[i]);
+    quick_sort(0,SI-1);
+    print();
+    return 0;
+}
+//MERGE SORT
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdbool.h>
+#include<string.h>
+#include<math.h>
+#include<ctype.h>
+#include<limits.h>
+#define SI 5
+int arr[SI];
+void merge(int l,int mid,int h){
+
+int a1 = mid-l+1;
+int b = h-mid;
+int A[a1],B[b];
+int i,k,j;
+for(i=0;i<a1;i++)
+    A[i] = arr[i+l];
+for(i = 1;i<h+1;i++)
+    B[i-1] = arr[mid+i];
+i = 0;j=0;k=l;
+while(i<a1 && j<b){
+    if(A[i]<=B[j]){
+        arr[k++] = A[i++];
+    }
+    else if(A[i]>=B[j])
+        arr[k++] = B[j++];
+}
+while(i<a1)
+    arr[k++] = A[i++];
+while(j<b)
+    arr[k++] = B[j++];
+
+}
+
+
+void mergesort(int l,int h)
+{
+ if(l<h){
+    int mid = (l+h)/2;
+    //mergesort(l,mid);
+    mergesort(mid+1,h);
+    merge(l,mid,h);
+
+ }
+}
+void print()
+{
+    for(int i = 0;i<SI;i++)
+        printf("%d ",arr[i]);
+}
+int main()
+{
+    printf("Enter the numbers:\n");
+    for(int i =0;i<SI;i++)
+        scanf("%d",&arr[i]);
+    mergesort(0,SI-1);
+    print();
+    return 0;
+}
+
+Ex no :16
+Implementation of Collision Resolution Techniques
+
+PROGRAM:
+1.Open Addressing:
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdbool.h>
+#include<string.h>
+#include<math.h>
+#include<ctype.h>
+#include<limits.h>
+#define SI 5
+#define SIZE 10
+
+struct HashNode {
+    int key;
+    int value;
+    bool occupied;
+};
+
+struct HashNode* createHashNode(int key, int value) {
+    struct HashNode* newNode = (struct HashNode*)malloc(sizeof(struct HashNode));
+    newNode->key = key;
+    newNode->value = value;
+    newNode->occupied = true;
+    return newNode;
+}
+
+struct HashNode** createHashTable() {
+    struct HashNode** table = (struct HashNode**)malloc(SIZE * sizeof(struct HashNode*));
+    for (int i = 0; i < SIZE; i++) {
+        table[i] = NULL;
+    }
+    return table;
+}
+
+int hashCode(int key) {
+    return key % SIZE;
+}
+
+void insertOpenAddressing(struct HashNode** table, int key, int value) {
+    int index = hashCode(key);
+    while (table[index] != NULL && table[index]->occupied) {
+        index = (index + 1) % SIZE;
+    }
+    table[index] = createHashNode(key, value);
+}
+
+void displayHashTable(struct HashNode** table) {
+    printf("Hash Table:\n");
+    for (int i = 0; i < SIZE; i++) {
+        if (table[i] != NULL && table[i]->occupied) {
+            printf("Index %d: Key = %d, Value = %d\n", i, table[i]->key, table[i]->value);
+        } else {
+            printf("Index %d: Empty\n", i);
+        }
+    }
+}
+
+int main() {
+    struct HashNode** hashTable = createHashTable();
+
+    insertOpenAddressing(hashTable, 5, 10);
+    insertOpenAddressing(hashTable, 15, 20);
+    insertOpenAddressing(hashTable, 25, 30);
+    insertOpenAddressing(hashTable, 35, 40);
+    insertOpenAddressing(hashTable, 45, 50);
+    insertOpenAddressing(hashTable, 55, 60);
+    insertOpenAddressing(hashTable, 65, 70);
+    insertOpenAddressing(hashTable, 75, 80);
+    insertOpenAddressing(hashTable, 85, 90);
+    insertOpenAddressing(hashTable, 95, 100);
+
+    displayHashTable(hashTable);
+
+    return 0;
+}
+
+2. Closed Addressing:
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define SIZE 10
+
+struct HashNode {
+    int key;
+    int value;
+    struct HashNode* next;
+};
+
+struct HashNode* createHashNode(int key, int value) {
+    struct HashNode* newNode = (struct HashNode*)malloc(sizeof(struct HashNode));
+    newNode->key = key;
+    newNode->value = value;
+    newNode->next = NULL;
+    return newNode;
+}
+
+struct HashNode** createHashTable() {
+    struct HashNode** table = (struct HashNode**)malloc(SIZE * sizeof(struct HashNode*));
+    for (int i = 0; i < SIZE; i++) {
+        table[i] = NULL;
+    }
+    return table;
+}
+
+int hashCode(int key) {
+    return key % SIZE;
+}
+
+void insertClosedAddressing(struct HashNode** table, int key, int value) {
+    int index = hashCode(key);
+    if (table[index] == NULL) {
+        table[index] = createHashNode(key, value);
+    } else {
+        struct HashNode* newNode = createHashNode(key, value);
+        newNode->next = table[index];
+        table[index] = newNode;
+    }
+}
+
+void displayHashTable(struct HashNode** table) {
+    printf("Hash Table:\n");
+    for (int i = 0; i < SIZE; i++) {
+        struct HashNode* current = table[i];
+        printf("Index %d: ", i);
+        while (current != NULL) {
+            printf("Key = %d, Value = %d -> ", current->key, current->value);
+            current = current->next;
+        }
+        printf("NULL\n");
+    }
+}
+
+int main() {
+    struct HashNode** hashTable = createHashTable();
+
+    insertClosedAddressing(hashTable, 5, 10);
+    insertClosedAddressing(hashTable, 15, 20);
+    insertClosedAddressing(hashTable, 25, 30);
+    insertClosedAddressing(hashTable, 35, 40);
+    insertClosedAddressing(hashTable, 45, 50);
+    insertClosedAddressing(hashTable, 55, 60);
+    insertClosedAddressing(hashTable, 65, 70);
+    insertClosedAddressing(hashTable, 75, 80);
+    insertClosedAddressing(hashTable, 85, 90);
+    insertClosedAddressing(hashTable, 95, 100);
+
+    displayHashTable(hashTable);
+
+    return 0;
+}
+
+3. Rehashing:
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+#define SIZE 10
+#define LOAD_FACTOR_THRESHOLD 0.7
+
+struct HashNode {
+    int key;
+    int value;
+    bool occupied;
+};
+
+struct HashNode* createHashNode(int key, int value) {
+    struct HashNode* newNode = (struct HashNode*)malloc(sizeof(struct HashNode));
+    newNode->key = key;
+    newNode->value = value;
+    newNode->occupied = true;
+    return newNode;
+}
+
+struct HashNode** createHashTable(int size) {
+    struct HashNode** table = (struct HashNode**)malloc(size * sizeof(struct HashNode*));
+    for (int i = 0; i < size; i++) {
+        table[i] = NULL;
+    }
+    return table;
+}
+
+int hashCode(int key, int size) {
+    return key % size;
+}
+
+void insertOpenAddressing(struct HashNode** table, int key
+, int value, int size) {
+    int index = hashCode(key, size);
+    while (table[index] != NULL && table[index]->occupied) {
+        index = (index + 1) % size;
+    }
+    table[index] = createHashNode(key, value);
+}
+
+void displayHashTable(struct HashNode** table, int size) {
+    printf("Hash Table:\n");
+    for (int i = 0; i < size; i++) {
+        if (table[i] != NULL && table[i]->occupied) {
+            printf("Index %d: Key = %d, Value = %d\n", i, table[i]->key, table[i]->value);
+        } else {
+            printf("Index %d: Empty\n", i);
+        }
+    }
+}
+
+double getLoadFactor(int count, int size) {
+    return (double)count / size;
+}
+
+void rehash(struct HashNode** oldTable, int oldSize, struct HashNode** newTable, int newSize) {
+    for (int i = 0; i < oldSize; i++) {
+        if (oldTable[i] != NULL && oldTable[i]->occupied) {
+            int index = oldTable[i]->key % newSize;
+            while (newTable[index] != NULL && newTable[index]->occupied) {
+                index = (index + 1) % newSize;
+            }
+            newTable[index] = oldTable[i];
+        }
+    }
+    free(oldTable);
+}
+
+int main() {
+    int initialSize = SIZE;
+    struct HashNode** hashTable = createHashTable(initialSize);
+    int count = 0;
+
+    insertOpenAddressing(hashTable, 5, 10, initialSize);
+    insertOpenAddressing(hashTable, 15, 20, initialSize);
+    insertOpenAddressing(hashTable, 25, 30, initialSize);
+    insertOpenAddressing(hashTable, 35, 40, initialSize);
+    insertOpenAddressing(hashTable, 45, 50, initialSize);
+    insertOpenAddressing(hashTable, 55, 60, initialSize);
+    insertOpenAddressing(hashTable, 65, 70, initialSize);
+    insertOpenAddressing(hashTable, 75, 80, initialSize);
+    insertOpenAddressing(hashTable, 85, 90, initialSize);
+    insertOpenAddressing(hashTable, 95, 100, initialSize);
+    count = 10;
+
+    double loadFactor = getLoadFactor(count, initialSize);
+    if (loadFactor > LOAD_FACTOR_THRESHOLD) {
+        int newSize = initialSize * 2; // Double the size
+        struct HashNode** newTable = createHashTable(newSize);
+        rehash(hashTable, initialSize, newTable, newSize);
+        hashTable = newTable;
+        initialSize = newSize;
+    }
+
+    displayHashTable(hashTable, initialSize);
+
+    return 0;
+}
